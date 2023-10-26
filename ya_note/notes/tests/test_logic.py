@@ -10,6 +10,7 @@ from notes.models import Note
 
 User = get_user_model()
 URL_SUCCESS = reverse('notes:success')
+URL_ADD = reverse('notes:add')
 
 
 class TestNoteCreation(TestCase):
@@ -24,7 +25,7 @@ class TestNoteCreation(TestCase):
         }
 
     def test_user_can_create_note(self):
-        url = reverse('notes:add')
+        url = URL_ADD
         self.client.force_login(self.author)
         response = self.client.post(url, data=self.form_data)
         self.assertRedirects(response, URL_SUCCESS)
@@ -36,7 +37,7 @@ class TestNoteCreation(TestCase):
         self.assertEqual(new_note.author, self.author)
 
     def test_anonymous_user_cant_create_note(self):
-        url = reverse('notes:add')
+        url = URL_ADD
         response = self.client.post(url, data=self.form_data)
         login_url = reverse('users:login')
         expected_url = f'{login_url}?next={url}'
@@ -44,7 +45,7 @@ class TestNoteCreation(TestCase):
         self.assertEqual(Note.objects.count(), 0)
 
     def test_empty_slug(self):
-        url = reverse('notes:add')
+        url = URL_ADD
         self.form_data.pop('slug')
         self.client.force_login(self.author)
         response = self.client.post(url, data=self.form_data)
@@ -74,7 +75,7 @@ class TestNote(TestCase):
         }
 
     def test_not_unique_slug(self):
-        url = reverse('notes:add')
+        url = URL_ADD
         self.form_data['slug'] = self.note.slug
         self.client.force_login(self.author)
         response = self.client.post(url, data=self.form_data)

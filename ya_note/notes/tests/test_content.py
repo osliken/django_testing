@@ -34,8 +34,8 @@ class TestContent(TestCase):
     def test_note_not_in_list_for_another_user(self):
         url = reverse('notes:list')
         response = self.reader_client.get(url)
-        object_list = response.context['object_list']
-        self.assertNotIn(self.note, object_list)
+        notes = response.context['object_list']
+        self.assertNotIn(self.note, notes)
 
     def test_pages_contains_form(self):
         urls = (
