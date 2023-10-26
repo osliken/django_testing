@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 
 import pytest
-
 from django.conf import settings
+from django.urls import reverse
 from django.utils import timezone
 
 from news.models import Comment, News
@@ -31,6 +31,11 @@ def news():
 @pytest.fixture
 def args_news(news):
     return news.id,
+
+
+@pytest.fixture
+def detail_args(args_news):
+    return reverse('news:detail', args=args_news)
 
 
 @pytest.fixture
